@@ -1,0 +1,57 @@
+#include <algorithm>
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+long long n, m;
+vector<vector<long long>> g;
+vector<pair<long long, long long>> r;
+
+vector<long long> size4;
+vector<long long> size5;
+vector<long long> size6;
+
+void dfs2(long long v, long long p, long long tag) { 
+	size4[v] = 1;
+	size5[v] = tag;
+	size6[tag] += 1;
+	for (auto u : g[v]) 
+		if (u != p) {
+			dfs2(u, v, tag);
+			size4[v] += size4[u];
+		}
+}
+
+int main() {
+	cin >> n >> m;
+	g.resize(n + 1);
+	r.resize(m + 1);
+
+	size4.resize(n + 1, 0);
+	size5.resize(n + 1, 0);
+	size6.resize(n + 1, 0);
+
+	long long a, b;
+	for (long long i = 1; i <= m; i++) {
+		cin >> a >> b;
+		r[i] = make_pair(a, b);
+		g[a].push_back(b);
+		g[b].push_back(a);
+	}
+
+	for (long long i = 1, j = 0; i < n; i++) 
+		if (size5[i] == 0)
+			dfs2(i, -1, ++j);
+
+	long long q, c;
+	cin >> q;
+	for (long long i = 0; i < q; i++) {
+		cin >> c;
+		long long v = min(size4[r[c].first], size4[r[c].second]);
+		long long h = v * (size6[size5[r[c].first]] - v);
+		cout << h << endl;
+	}
+
+	return 0;
+}

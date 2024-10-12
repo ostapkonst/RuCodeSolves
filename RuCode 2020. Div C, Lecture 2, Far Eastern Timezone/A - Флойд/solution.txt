@@ -1,0 +1,38 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
+using namespace std;
+
+const int MAX_N = 101;
+// const int INF = 1000000000;
+
+int d[MAX_N][MAX_N];
+int n;
+
+int main() {
+	cin >> n;
+
+	for (int i = 0; i < n; i++) {
+		for (int j = 0; j < n; j++) {
+			cin >> d[i][j];
+		}
+	}
+
+	for (int k = 0; k < n; k++) {
+		for (int i = 0; i < n; i++) {
+			for (int j = 0; j < n; j++) {
+				d[i][j] = min(d[i][j], d[i][k] + d[k][j]);
+			}
+		}
+	}
+
+	for (int i = 0; i < n; i++) {
+		for (int j = 0; j < n; j++) {
+			cout << d[i][j] << " ";
+		}
+		cout << endl;
+	}
+
+	return 0;
+}

@@ -1,0 +1,71 @@
+#include <algorithm>
+#include <iostream>
+#include <string>
+#include <vector>
+#include <climits>
+#include <cmath>
+#include <iterator>
+#include <cstring>
+
+using namespace std;
+
+const int N = 303;
+
+int d[N][N][N];
+vector<int> a, b, c; 
+
+int  calc(int m, int n, int l) {
+	for (int i = 0; i < m; i++) {
+		for (int j = 0; j < n; j++) {
+			for (int k = 0; k < l; k++) {
+				if (a[i] == b[j] && b[j] == c[k]) {
+					d[i+1][j+1][k+1] = d[i][j][k] + 1;
+				} else {
+					d[i+1][j+1][k+1] = max(d[i+1][j+1][k], max(d[i][j+1][k+1], d[i+1][j][k+1]));
+				}
+			}
+		}
+	}
+
+	return d[m][n][l];
+}
+
+
+int main() {
+	int m, l, n;
+	cin >> m >> n >> l;
+	memset(d, 0, sizeof(d));
+
+	a.resize(m);
+	b.resize(n);
+	c.resize(l);
+
+	int i = 0, j = 0, k = 0;
+	while (i < m) cin >> a[i++];
+	while (j < n) cin >> b[j++];
+	while (k < l) cin >> c[k++];
+
+	cout << calc(m, n, l);
+
+	vector<int> res;
+	while (m > 0 && n > 0 && l > 0) {
+		int step = d[m][n][l];
+		if (step == d[m-1][n][l]) m--;
+		else if (step == d[m][n-1][l]) n--;
+		else if (step == d[m][n][l-1]) l--;
+		else {
+			res.push_back(a[m-1]);
+			m -= 1;
+			l -= 1;
+			n -= 1;
+		}
+	}
+	
+	reverse(res.begin(), res.end());
+	cout << endl;
+	for (auto v: res) cout << v << " ";
+
+	return 0;
+
+
+}

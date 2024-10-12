@@ -1,0 +1,64 @@
+#include <algorithm>
+#include <iostream>
+#include <vector>
+#include <climits>
+#include <queue>
+#include <iterator>
+#include <list>
+
+using namespace std;
+
+int n;
+vector<list<int>> g;
+vector<bool> used;
+
+vector<int> bfs(int source) {
+	vector<int> dst(g.size(), -1);
+
+    queue<int> q;
+    q.push(source);
+	fill(used.begin(), used.end(), false); 
+    used[source] = true;
+    dst[source] = 0;
+
+    while (!q.empty()) {
+        int cur = q.front();
+        q.pop();
+
+        for (int neighbor: g[cur]) {
+            if (!used[neighbor]) {
+                q.push(neighbor);
+                used[neighbor] = true;
+                dst[neighbor] = dst[cur] + 1;
+            }
+        }
+    }
+
+	return dst;
+}
+
+int diameterTree()  {      
+    int v = 1, u = 1, w = 1;
+    vector<int> da = bfs(v);
+	u = distance(da.begin(), max_element(da.begin(), da.end()));
+    vector<int> db = bfs(u);
+	w = distance(db.begin(), max_element(db.begin(), db.end()));
+    return db[w];
+}
+
+int main() {
+	cin >> n;
+	g.resize(n + 1);
+	used.resize(n + 1, false);
+
+	for (int i = 0; i < n; i++) {
+		int a, b;
+		cin >> a >> b;
+		g[a].push_back(b);
+		g[b].push_back(a);
+	}
+
+	cout << diameterTree();
+
+	return 0;
+}

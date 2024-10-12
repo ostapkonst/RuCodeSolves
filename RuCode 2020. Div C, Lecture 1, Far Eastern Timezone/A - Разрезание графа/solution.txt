@@ -1,0 +1,80 @@
+#include <iostream>
+#include <string>
+
+using namespace std;
+
+const int LAG = 10; // пусть будет
+const int MAX_K = 150000 + LAG;
+const int MAX_N = 50000 + LAG;
+
+enum EType {
+	cut,
+	ask
+};
+
+struct TOperation {
+	EType type;
+	int x;
+	int y;
+	string ans;
+};
+
+struct TOperation inparr[MAX_K];
+int linkedarr[MAX_N];
+int n, m, k;
+
+void build_set (int v) {
+	linkedarr[v] = v;
+}
+
+int find_set (int v) {
+	if (v == linkedarr[v])
+		return v;
+	return linkedarr[v] = find_set(linkedarr[v]);
+}
+
+void union_sets (int a, int b) {
+	int x = find_set (a);
+	int y = find_set (b);
+	if (x != y)
+		linkedarr[y] = x;
+}
+
+int main() {
+	int x, y;
+	string command;
+
+	cin >> n >> m >> k;
+	for (int i = 0; i < m; i++) {
+		cin >> x >> y;
+		//  пропускаем, не пригодится  
+	}
+
+	for (int i = 1; i <= n; i++) {
+		build_set(i);	
+	}
+
+	for (int i = 0; i < k; i++) {
+		cin >> command >> x >> y;
+		inparr[i].type = (command == "ask") ? EType::ask : EType::cut; 
+		inparr[i].x = x;
+		inparr[i].y = y;
+	}
+
+	for (int i = k - 1; i >= 0; i--) {
+		x = inparr[i].x; y = inparr[i].y;
+		if (inparr[i].type == EType::ask) {
+			inparr[i].ans = find_set(x) == find_set(y) ? "YES" : "NO";
+		} else {
+			union_sets(x, y);
+		}
+	}
+
+	for (int i = 0; i < k; i++) {
+		if (inparr[i].type == EType::ask) {
+			cout << inparr[i].ans << endl;
+		}
+	}
+
+	return 0;
+}

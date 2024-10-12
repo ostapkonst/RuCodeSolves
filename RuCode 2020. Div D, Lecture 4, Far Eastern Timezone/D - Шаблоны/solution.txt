@@ -1,0 +1,45 @@
+#include <algorithm>
+#include <iostream>
+#include <string>
+#include <vector>
+#include <climits>
+#include <cmath>
+#include <iterator>
+#include <cstring>
+
+using namespace std;
+
+const int N = 10010;
+
+int n, m;
+string s, p;
+bool d[N][N];
+
+int main() {
+	cin >> p >> s;
+	int m = p.length(), n = s.length();
+	memset(d, false, sizeof(d));
+
+	d[0][0] = true;
+	for (int i = 0; i < m && p[i] == '*'; i++) d[0][i + 1] = true;
+	for (int i = 1; i <= n; i++) {
+		for (int j = 1; j <= m; j++) {
+			switch (p[j - 1]) {
+			case '*':
+				d[i][j] = d[i - 1][j] || d[i][j - 1];
+				break;
+			case '?':
+				d[i][j] = d[i - 1][j - 1];
+				break;
+			default:
+				d[i][j] = d[i - 1][j - 1] && s[i - 1] == p[j - 1];
+			}
+		}
+	}
+
+	cout << (d[n][m] ? "YES" : "NO");
+
+	return 0;
+
+
+}

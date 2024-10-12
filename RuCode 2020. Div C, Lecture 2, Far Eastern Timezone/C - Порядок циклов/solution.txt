@@ -1,0 +1,21 @@
+#include <iostream>
+#include <string>
+#include <algorithm>
+
+using namespace std;
+
+int main() {
+	char k, i, j;
+	cin >> k >> i >> j;
+
+	if (k == 'k') 
+		cout << "0 0";
+	else {
+		cout << "4 3" << endl;
+		cout << "2 3" << endl;
+		cout << "3 4" << endl;
+		cout << "1 4" << endl;
+	}
+
+	return 0;
+}

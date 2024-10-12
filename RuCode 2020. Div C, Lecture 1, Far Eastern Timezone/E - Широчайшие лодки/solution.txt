@@ -1,0 +1,93 @@
+#include <vector>
+#include <iostream>
+#include <algorithm>    // std::sort
+#include <stack>
+
+using namespace std;
+
+int matrix[1000][1000];
+int stop;
+int res;
+
+vector<vector<int>> tree;
+
+void dfs(int v, int p = -1, int maxn = 200) { 
+	if (stop == v) {
+		res = maxn;
+		return;
+	}
+
+	for (int u : tree[v]) {
+		if (u != p) {
+			dfs(u, v, min(maxn, matrix[v][u]));
+		}
+	}
+}
+
+vector<int> tree_id;
+
+void make_set (int v) {
+	tree_id[v] = v;
+}
+ 
+int find_set (int v) {
+	if (v == tree_id[v])
+		return v;
+	return tree_id[v] = find_set (tree_id[v]);
+}
+
+void union_sets (int a, int b) {
+	a = find_set (a);
+	b = find_set (b);
+	if (a != b)
+		tree_id[b] = a;
+}
+
+int main() {
+	int n, m, k;
+
+	cin >> n >> m >> k;
+
+	vector < pair < int, pair<int,int> > > g (m); // вес - вершина 1 - вершина 2
+	for (int i = 0; i < m;i++) 
+	{
+		int a, b ,w;
+		cin >> a >> b >> w;
+		g[i] = make_pair(-w, make_pair(a - 1, b - 1));
+	}
+
+	sort (g.begin(), g.end());
+	tree_id.resize(n);
+	tree.resize(n);
+
+	for (int i=0; i<n; ++i)
+		make_set(i);
+
+	for (int i=0; i<m; ++i)
+	{
+		int a = g[i].second.first, b = g[i].second.second, l = -g[i].first;
+		int set_a = find_set(a), set_b = find_set(b);
+		if (set_a != set_b)
+		{
+			matrix[a][b] = matrix[b][a] = l;
+			tree[a].push_back(b);
+			tree[b].push_back(a);
+			union_sets(set_a, set_b);
+		}
+	}
+	/*
+	for (int i = 0; i < n; i++){
+		for (int j = 0 ; j < n; j++) {
+			cout << matrix[i][j] << " ";
+		}
+		cout << endl;
+	}*/
+	
+	for (int i = 0; i < k; i++) {
+		int v, b;
+		cin >> v >> b;
+		stop = b - 1;
+		dfs(v - 1);
+		cout << res << endl;
+	}
+}

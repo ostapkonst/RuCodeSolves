@@ -1,0 +1,66 @@
+#include <vector>
+#include <iostream>
+#include <algorithm> 
+#include <string>
+
+using namespace std;
+
+struct edge {
+	int a, b, cost;
+};
+
+int n, m;
+const int INF = 1000000000;
+vector<edge> e;
+vector < vector<int> > g;
+vector<bool> used;
+
+void dfs (int v) {
+	used[v] = true;
+	for (vector<int>::iterator i=g[v].begin(); i!=g[v].end(); ++i)
+		if (!used[*i])
+			dfs (*i);
+}
+
+int main() {
+	cin >> n >> m;
+	e.resize(m);
+	g.resize(n);
+	used.resize(n, false);
+
+	for (int i = 0; i < m; i++) 
+	{
+		cin >> e[i].a >> e[i].b >> e[i].cost;
+		e[i].a--;
+		e[i].b--;
+		e[i].cost *= -1;
+		g[e[i].a].push_back(e[i].b);
+	}
+
+	vector<int> d (n, INF);
+	vector<int> tmp_arr(n);
+	d[0] = 0;
+
+	for (int i=0; i<n; ++i) {
+		if (i==n-1) {
+			tmp_arr.assign(d.begin(), d.end());
+		}
+		for (int j=0; j<m; ++j) {
+			if (d[e[j].a] < INF && (d[e[j].b] > d[e[j].a] + e[j].cost)) {
+				d[e[j].b] = d[e[j].a] + e[j].cost;
+			}
+		}
+	}
+
+	for (int i = 0; i < n; i++) {
+		if (tmp_arr[i] == d[i]) continue;
+		dfs(i);
+	}
+
+	if (d[n-1] == INF)
+		cout << ":(" << endl;
+	else if (used[n-1])
+		cout << ":)" << endl;
+	else
+		cout << -d[n-1] << endl;
+}

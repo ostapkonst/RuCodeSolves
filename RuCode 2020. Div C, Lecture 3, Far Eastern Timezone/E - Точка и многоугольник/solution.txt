@@ -1,0 +1,47 @@
+#include <iostream>
+#include <cmath>
+#include <vector>
+
+using namespace std;
+
+struct point
+{
+	int x, y;
+};
+
+bool isOnLine(point a, point b, point c) {
+	return (c.x - a.x) * (b.y - a.y) == (c.y - a.y) * (b.x - a.x);
+}
+
+bool calc(point a, point b, point dot) {
+	if (isOnLine(a, b, dot)) {
+		cout << "YES";
+		exit(0);
+	}
+
+	return (a.y < dot.y && b.y >= dot.y || b.y < dot.y && a.y >= dot.y) &&
+		(a.x + (dot.y - a.y) / (b.y - a.y) * (b.x - a.x) < dot.x);
+}
+
+int main() {
+	point a, b, dot, d;
+	int n;
+	cin >> n >> dot.x >> dot.y;
+	int counter = 0;
+
+	for (int i = 1; i <= n; i++) {
+		cin >> a.x >> a.y;
+		if (i == 1) 
+			d = a;
+		else {
+			counter += (int)calc(a, b, dot);
+		}
+		b = a;
+	}
+
+	counter += (int)calc(d, a, dot);
+
+	cout << (counter % 2 == 1 ? "YES" : "NO");
+
+	return 0;
+}

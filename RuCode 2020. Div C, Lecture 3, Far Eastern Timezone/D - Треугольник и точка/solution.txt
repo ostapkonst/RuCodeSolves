@@ -1,0 +1,33 @@
+#include <iostream>
+#include <cmath>
+#include <vector>
+
+using namespace std;
+
+struct point
+{
+	int x, y;
+
+	bool operator == (const point& other) const {
+		return x == other.x && y == other.y;
+	}
+};
+
+int main() {
+	point a, b, c, d;
+	cin >> a.x >> a.y;
+	cin >> b.x >> b.y;
+	cin >> c.x >> c.y;
+	cin >> d.x >> d.y;
+
+	if (d == a || d == b || d == c) {
+		cout << "In";
+	} else {
+		long long z1 = (a.x - d.x) * (b.y - a.y) - (b.x - a.x) * (a.y - d.y);
+		long long z2 = (b.x - d.x) * (c.y - b.y) - (c.x - b.x) * (b.y - d.y);
+		long long z3 = (c.x - d.x) * (a.y - c.y) - (a.x - c.x) * (c.y - d.y);
+		cout << (((z1>=0 && z2>=0 && z3>=0) || (z1<=0 && z2<=0 && z3<=0)) ? "In" : "Out");
+	}
+
+	return 0;
+}

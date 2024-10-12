@@ -1,0 +1,50 @@
+#include <algorithm>
+#include <iostream>
+#include <string>
+#include <vector>
+
+using namespace std;
+
+const int N = 2;
+
+string r[N];
+
+int levenshtein_distance(const string &a, const string &b) {
+	int n = a.length();
+	int m = b.length();
+
+	if (n > m) {
+		return levenshtein_distance(b, a);
+	}
+
+	vector<int> current_row(n + 1);
+	for (int i = 0; i <= n; i++) {
+		current_row[i] = i;
+	}
+
+	for (int i = 1; i <= m; i++) {
+		vector<int> previous_row(current_row);
+		fill(current_row.begin(), current_row.end(), 0);
+		current_row[0] = i;
+		for (int j = 1; j <= n; j++) {
+			int add = previous_row[j] + 1;
+			int del = current_row[j - 1] + 1;
+			int change = previous_row[j - 1];
+			if (a[j - 1] != b[i - 1]) {
+				change += 1;
+			}
+			current_row[j] = min(add, min(del, change));
+		}
+	}
+	return current_row[n];
+}
+
+int main() {
+	cin >> r[0] >> r[1];
+
+	int minv = levenshtein_distance(r[0], r[1]);
+
+	cout << minv;
+
+	return 0;
+}

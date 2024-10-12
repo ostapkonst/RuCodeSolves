@@ -1,0 +1,57 @@
+#include <algorithm>
+#include <iostream>
+#include <string>
+#include <vector>
+#include <climits>
+#include <cmath>
+#include <iterator>
+#include <cstring>
+
+using namespace std;
+
+const int N = 110;
+
+int n;
+string a, b;
+int d[N][N];
+int ind[N];
+
+int calc(int m, int n){
+	if (m == -1 || n == -1) return 0;
+	if (d[m][n] != -1) return d[m][n];
+
+	if (a[m] == b[n]) {
+		return d[m][n] = 1 + calc(m - 1, n - 1);
+	} else {
+		return d[m][n] = max(calc(m, n - 1), calc(m - 1, n));
+	}
+}
+
+int main() {
+	memset(d, -1, sizeof(d));
+
+	cin >> a >> b;
+	int m = a.length() - 1, n = b.length() - 1;
+	cout << calc(m, n);
+
+	vector<int> resA, resB;
+	for(int i = m, j = n; i >= 0 && j >= 0;)	{
+		if(a[i] == b[j]) {
+			resA.push_back(1 + i--);
+			resB.push_back(1 + j--);
+		} else {
+			if(i > 0 && d[i][j] == d[i-1][j]) i--; else j--;
+		}
+	}
+	
+	reverse(resA.begin(), resA.end());
+	reverse(resB.begin(), resB.end());
+	cout << endl;
+	copy(resA.begin(), resA.end(), ostream_iterator<int>(cout, " "));
+	cout << endl;
+	copy(resB.begin(), resB.end(), ostream_iterator<int>(cout, " "));
+
+	return 0;
+
+
+}

@@ -1,0 +1,40 @@
+#include <algorithm>
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+long n;
+vector<vector<long>> g;
+vector<pair<long, long>> r;
+
+void dfs(int v, int p) { 
+	r[v].first = 1;
+	r[v].second = 1;
+	for (auto u : g[v]) 
+		if (u != p) {
+			dfs(u, v);
+			r[v].first += r[u].first;
+			r[v].second += r[u].first + r[u].second;
+		}
+}
+
+int main() {
+	cin >> n;
+	g.resize(n + 1);
+	r.resize(n + 1);
+
+	int b;
+	for (int a = 2; a <= n; a++) {
+		cin >> b;
+		g[b].push_back(a);
+	}
+
+	dfs(1, -1);
+
+	for (int a = 1; a <= n; a++) {
+		cout << r[a].second << " ";
+	}
+
+	return 0;
+}

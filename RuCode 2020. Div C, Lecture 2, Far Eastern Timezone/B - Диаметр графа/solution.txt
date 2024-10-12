@@ -1,0 +1,55 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
+using namespace std;
+
+const int MAX_N = 123;
+const int INF = 1000000123;
+
+int d[MAX_N][MAX_N];
+int n;
+
+int main() {
+	cin >> n;
+
+	for (int i = 0; i < n; i++) {
+		for (int j = 0; j < n; j++) {
+			int a;
+			cin >> a;
+			if (a == -1) {
+				a = INF;
+			}
+			d[i][j] = a;
+		}
+	}
+
+	for (int k = 0; k < n; k++) {
+		for (int i = 0; i < n; i++) {
+			for (int j = 0; j < n; j++) {
+				d[i][j] = min(d[i][j], d[i][k] + d[k][j]);
+			}
+		}
+	}
+
+	int dim = 0;
+	int rad = INF;
+	for (int i = 0; i < n; i++) {
+		int maxr = -1;
+		for (int j = 0; j < n; j++) {
+			if (i == j || d[i][j] == INF) continue;
+			if (d[i][j] > dim) {
+				dim = d[i][j];
+			}
+			if (d[i][j] > maxr) {
+				maxr = d[i][j];
+			}
+		}
+		if (maxr != -1)
+			rad = min(rad, maxr);
+	}
+
+	cout << dim << endl << rad;
+
+	return 0;
+}

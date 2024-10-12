@@ -1,0 +1,72 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
+using namespace std;
+
+vector<pair<int, pair<int, int>>> v;
+vector<int> linkedarr;
+int n, m = 0;
+
+void build_set (int v) {
+	linkedarr[v] = v;
+}
+
+int find_set (int v) {
+	if (v == linkedarr[v])
+		return v;
+	return linkedarr[v] = find_set(linkedarr[v]);
+}
+
+void union_sets (int a, int b) {
+	int x = find_set (a);
+	int y = find_set (b);
+	if (x != y)
+		linkedarr[y] = x;
+}
+
+int main() {
+	int w, ans = 0;
+	string command;
+
+	cin >> n;
+	int sz = (n * n - n) / 2 + n + 1;
+	v.resize(sz);
+	linkedarr.resize(n + 1);
+
+	for (int i = 1; i <= n; i++) {
+		for (int j = 1; j <= n; j++) {
+			cin >> w;
+			if (j > i)  {
+				m++;
+				v[m].first = w;  v[m].second.first = i; v[m].second.second = j;
+				// cout << w << " " << i << " " << j << endl;  
+			}
+		}
+	}
+
+	for (int i = m + 1; i <= m + n; i++) {
+			cin >> w;
+			v[i].first = w;  v[i].second.first = 0; v[i].second.second = i - m;
+			// cout << w << " " << 0 << " " << i-m << endl; 
+	}
+
+	for (int i = 0; i <= n; i++) {
+		build_set(i);	
+	}
+	
+	sort(v.begin(), v.end());
+	for (int i = 0; i < sz; i++) {
+		int a = v[i].second.first;
+		int b = v[i].second.second;
+		int c = v[i].first;
+		if (find_set(a) != find_set(b)) {
+			ans += c;
+			union_sets(a, b);
+		}
+	}
+
+	cout <<  ans;
+
+	return 0;
+}
